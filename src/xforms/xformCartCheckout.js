@@ -80,7 +80,7 @@ function xformCartFulfillmentGroup(fulfillmentGroup, cart) {
  * After-tax Pricing Example: Product costs 100$ and shipping is 5$. When a tax of 20% is used for the shop with the
  * after-tax pricing model this means the 20% tax is already included in the 105$ total price. In this case the total
  * tax should not be added to the combined total.
- * @param taxes
+ * @param {Object[]} taxes - all applied taxes for cart
  * @returns {number} tax total for all pre-tax pricing taxes.
  */
 function calculatePreTaxPricingTaxTotal(taxes) {
