@@ -70,6 +70,33 @@ function xformCartFulfillmentGroup(fulfillmentGroup, cart) {
 }
 
 /**
+ * @summary The taxes support two pricing modes: pre-tax after-tax pricing.
+ * When pre-tax is enabled, all defined prices of products, shipment and surcharges the tax is calculated onto do not
+ * include the tax.
+ *
+ * Pre-tax Pricing Example: Product costs 100$ and shipping is 5$. The total price not including tax is 105$.
+ * An example tax of 20% is calculated for the 105$ and the total becomes 105$ + 20% * 105$ = 126$
+ *
+ * After-tax Pricing Example: Product costs 100$ and shipping is 5$. When a tax of 20% is used for the shop with the
+ * after-tax pricing model this means the 20% tax is already included in the 105$ total price. In this case the total
+ * tax should not be added to the combined total.
+ * @param taxes
+ * @returns {number} tax total for all pre-tax pricing taxes.
+ */
+function calculatePreTaxPricingTaxTotal(taxes) {
+  let preTaxPricingTaxTotal = 0;
+
+  if (!taxes) return 0;
+
+  for (const { tax, customFields } of taxes) {
+    if (tax === null) return 0;
+    if (!customFields || !customFields.afterTaxPricing) preTaxPricingTaxTotal += tax;
+  }
+
+  return preTaxPricingTaxTotal;
+}
+
+/**
  * @param {Object} collections Map of Mongo collections
  * @param {Object} cart Cart document
  * @returns {Object} Checkout object
@@ -101,22 +128,22 @@ export default async function xformCartCheckout(collections, cart) {
     }
   }
 
-  // Each item may have a total tax amount on it. We can sum these to get the total tax amount.
-  // If any of them are null, we leave the total null also. Using for-of rather than reduce
-  // so that we can set to null and break if we hit a not-yet-calculated item.
+  let taxes;
   let taxTotal = null;
   let taxableAmount = null;
   const { taxSummary } = cart;
   if (taxSummary) {
-    ({ tax: taxTotal, taxableAmount } = taxSummary);
+    ({ tax: taxTotal, taxableAmount, taxes } = taxSummary);
   }
+
+  const preTaxPricingTaxTotal = calculatePreTaxPricingTaxTotal(taxes);
 
   const discountTotal = cart.discount || 0;
 
   // surchargeTotal is sum of all surcharges is qty * amount for each item, summed
   const surchargeTotal = (cart.surcharges || []).reduce((sum, surcharge) => (sum + surcharge.amount), 0);
 
-  const total = Math.max(0, itemTotal + fulfillmentTotal + taxTotal + surchargeTotal - discountTotal);
+  const total = Math.max(0, itemTotal + fulfillmentTotal + preTaxPricingTaxTotal + surchargeTotal - discountTotal);
 
   let fulfillmentTotalMoneyObject = null;
   if (fulfillmentTotal !== null) {
