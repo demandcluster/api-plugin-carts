@@ -7,21 +7,21 @@
   "engines": {
     "node": ">=12.14.1"
   },
-  "homepage": "https://github.com/reactioncommerce/api-plugin-carts",
-  "url": "https://github.com/reactioncommerce/api-plugin-carts",
+  "homepage": "https://github.com/demandcluster/api-plugin-carts",
+  "url": "https://github.com/demandcluster/api-plugin-carts",
   "email": "engineering@reactioncommerce.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reactioncommerce/api-plugin-carts.git"
+    "url": "git+https://github.com/demandcluster/api-plugin-carts.git"
   },
   "author": {
-    "name": "Reaction Commerce",
+    "name": "Reaction Commerce/Demandcluster",
     "email": "engineering@reactioncommerce.com",
     "url": "https://reactioncommerce.com"
   },
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/reactioncommerce/api-plugin-carts/issues"
+    "url": "https://github.com/demandcluster/api-plugin-carts/issues"
   },
   "sideEffects": false,
   "dependencies": {
