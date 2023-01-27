@@ -228,7 +228,7 @@ const ShippingMethod = new SimpleSchema({
   "group": {
     type: String,
     label: "Group",
-    allowedValues: ["Ground", "Priority", "One Day", "Free"],
+    //allowedValues: ["Ground", "Priority", "One Day", "Free"],
     optional: true
   },
   "cost": {
